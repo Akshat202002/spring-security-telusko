@@ -59,25 +59,25 @@ public class SecurityConfig {
         */
 
         // Disable CSRF protection using a lambda for clarity and conciseness
-        http.csrf(customizer -> customizer.disable());
+        /*http.csrf(customizer -> customizer.disable());*/
 
         // Configuring Authorization Rules
         // This line ensures that every request made to the application must be authenticated.
         // Without proper authentication, users will be denied access.
-        http.authorizeHttpRequests(request ->
+        /*http.authorizeHttpRequests(request ->
                 request.anyRequest().authenticated() // Enforce authentication for all requests
-        );
+        );*/
 
         // Configuring Form-Based Login
         // This line enables the default Spring Security login mechanism, which allows users
         // to authenticate via a login form provided by Spring Security.
-        http.formLogin(Customizer.withDefaults());
+        /*http.formLogin(Customizer.withDefaults());*/
 
         // Configuring HTTP Basic Authentication
         // This line enables Basic authentication, which is useful for API clients like Postman.
         // It prevents the application from returning an HTML login form when a protected
         // resource is accessed using Basic authentication.
-        http.httpBasic(Customizer.withDefaults());
+        /*http.httpBasic(Customizer.withDefaults());*/
 
         // Configure Stateless Session Management
         // By setting the session creation policy to stateless, we ensure that the application
@@ -85,25 +85,29 @@ public class SecurityConfig {
         // independently, which is common in RESTful APIs.
         // Note: Stateless session management disables form login, as each request generates a new session.
         // This is ideal for API use but may require different handling for traditional web applications.
-        http.sessionManagement(session ->
+        /*http.sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        );
+        );*/
 
         // Build and return the configured SecurityFilterChain object
         // This method constructs the SecurityFilterChain, containing all the above configurations.
-        return http.build();
+        /*return http.build();*/
 
 
         // Or using builder pattern
-        /* return http
+         return http
                 .csrf(customizer -> customizer.disable())
-                .authorizeHttpRequests(request ->
-                request.anyRequest().authenticated())
+                .authorizeHttpRequests(request -> request
+                        // Open resources i.e. requires no auth
+                        .requestMatchers("register", "login")
+                        .permitAll()
+                        // All other resources are closed i.e. requires auth
+                        .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(
                         session ->
                                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .build(); */
+                .build();
 
     }
 
